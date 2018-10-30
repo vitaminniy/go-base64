@@ -1,1 +1,1 @@
-module go-base64
+module github.com/vitaminniy/go-base64

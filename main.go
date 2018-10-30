@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/base64"
 	"flag"
 	"fmt"
@@ -15,20 +16,18 @@ func init() {
 }
 
 func main() {
-	if len(os.Args) > 1 {
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
 		if decode {
-			decodedText, err := base64.StdEncoding.DecodeString(os.Args[1])
+			decodedText, err := base64.StdEncoding.DecodeString(scanner.Text())
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "can't decode %s due to %v\n", os.Args[1], err)
+				fmt.Fprintf(os.Stderr, "can't decode %s due to %v\n", scanner.Text(), err)
 				os.Exit(1)
 			}
-			fmt.Fprintln(os.Stdout, decodedText)
+			fmt.Fprintln(os.Stdout, string(decodedText))
 		} else {
-			encodedText := base64.StdEncoding.EncodeToString([]byte(os.Args[1]))
+			encodedText := base64.StdEncoding.EncodeToString([]byte(scanner.Text()))
 			fmt.Fprintln(os.Stdout, encodedText)
 		}
-	} else {
-		fmt.Println("No args where specified.")
-		os.Exit(0)
 	}
 }
